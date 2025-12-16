@@ -1,62 +1,56 @@
 import streamlit as st
 import pandas as pd
-import re # Joker aramalar için regex kütüphanesi
+import re
 
-# --- 1. AYARLAR VE GELİŞMİŞ VERİTABANI ---
-st.set_page_config(page_title="Şarkı Yazarı Sözlüğü Pro", layout="wide")
+# --- 1. AYARLAR VE VERİTABANI ---
+st.set_page_config(page_title="Şarkı Yazarı Stüdyosu v3", layout="wide")
 
-# BURASI ÖNEMLİ: Artık kelimeler sadece isim değil, özellikleri olan nesneler.
-# Not: Bu listeyi ileride Excel'den otomatik çekeceğiz, şimdilik örnekler var.
+# Veritabanına "Vurgu" özelliğini ekledik
 kelime_veritabani = [
-    {"kelime": "seda", "anlam": "Ses, yankı.", "tur": "İsim", "duygu": "Nötr", "es_anlam": "ses, avaz"},
-    {"kelime": "bedbaht", "anlam": "Mutsuz, bahtsız.", "tur": "Sıfat", "duygu": "Melankolik", "es_anlam": "talihsiz"},
-    {"kelime": "hey", "anlam": "Seslenme sözü.", "tur": "Nida", "duygu": "Coşkulu", "es_anlam": "-"},
-    {"kelime": "yakamoz", "anlam": "Denizde balıkların veya küreklerin kımıldanışıyla oluşan parıltı.", "tur": "İsim", "duygu": "Romantik", "es_anlam": "parıltı"},
-    {"kelime": "ah", "anlam": "Acı, üzüntü veya özlem anlatan ses.", "tur": "Nida", "duygu": "Melankolik", "es_anlam": "feryat"},
-    {"kelime": "müphem", "anlam": "Belirsiz.", "tur": "Sıfat", "duygu": "Gizemli", "es_anlam": "belirsiz"},
-    {"kelime": "ghostlamak", "anlam": "Bir ilişkiyi aniden, habersizce kesmek.", "tur": "Fiil (Argo)", "duygu": "Modern/Negatif", "es_anlam": "yok olmak"},
-    {"kelime": "efkar", "anlam": "Üzüntülü düşünceler.", "tur": "İsim", "duygu": "Melankolik", "es_anlam": "tasa, keder"},
-    {"kelime": "karanfil", "anlam": "Kokulu bir çiçek.", "tur": "İsim", "duygu": "Romantik", "es_anlam": "-"},
-    {"kelime": "baki", "anlam": "Sürekli, kalıcı.", "tur": "Sıfat", "duygu": "Ciddi", "es_anlam": "ebedi"},
-    {"kelime": "şayet", "anlam": "Eğer.", "tur": "Bağlaç", "duygu": "Nötr", "es_anlam": "eğer, ise"},
-    {"kelime": "vuslat", "anlam": "Sevgiliye kavuşma.", "tur": "İsim", "duygu": "Romantik", "es_anlam": "kavuşma"}
+    {"kelime": "seda", "anlam": "Ses, yankı.", "tur": "İsim", "duygu": "Nötr", "es_anlam": "ses, avaz", "vurgu": "Son"},
+    {"kelime": "bedbaht", "anlam": "Mutsuz, bahtsız.", "tur": "Sıfat", "duygu": "Melankolik", "es_anlam": "talihsiz", "vurgu": "Son"},
+    {"kelime": "hey", "anlam": "Seslenme sözü.", "tur": "Nida", "duygu": "Coşkulu", "es_anlam": "-", "vurgu": "İlk"},
+    {"kelime": "yakamoz", "anlam": "Denizdeki parıltı.", "tur": "İsim", "duygu": "Romantik", "es_anlam": "parıltı", "vurgu": "Son"},
+    {"kelime": "ah", "anlam": "Acı, özlem sesi.", "tur": "Nida", "duygu": "Melankolik", "es_anlam": "feryat", "vurgu": "İlk"},
+    {"kelime": "müphem", "anlam": "Belirsiz.", "tur": "Sıfat", "duygu": "Gizemli", "es_anlam": "belirsiz", "vurgu": "Son"},
+    {"kelime": "ghostlamak", "anlam": "İletişimi aniden kesmek.", "tur": "Fiil (Argo)", "duygu": "Modern/Negatif", "es_anlam": "yok olmak", "vurgu": "İlk"},
+    {"kelime": "efkar", "anlam": "Üzüntülü düşünceler.", "tur": "İsim", "duygu": "Melankolik", "es_anlam": "tasa", "vurgu": "Son"},
+    {"kelime": "karanfil", "anlam": "Kokulu çiçek.", "tur": "İsim", "duygu": "Romantik", "es_anlam": "-", "vurgu": "Son"},
+    {"kelime": "baki", "anlam": "Kalıcı, sonsuz.", "tur": "Sıfat", "duygu": "Ciddi", "es_anlam": "ebedi", "vurgu": "Son"},
+    {"kelime": "masa", "anlam": "Mobilya.", "tur": "İsim", "duygu": "Nötr", "es_anlam": "-", "vurgu": "İlk"},
+    {"kelime": "bence", "anlam": "Bana göre.", "tur": "Zarf", "duygu": "Nötr", "es_anlam": "-", "vurgu": "İlk"}
 ]
 
 # --- 2. GELİŞMİŞ ANALİZ MOTORU ---
 def detayli_analiz(kayit):
     kelime = kayit["kelime"].lower()
     unluler = "aeıioöuü"
-    kalin_unluler = "aıou"
-    ince_unluler = "eiöü"
     sert_unsuzler = "fstkçşhp"
     
     kelime_unluler = [h for h in kelime if h in unluler]
-    
-    # Sesli harf haritası (Ters köşe kafiye için: 'kalem' -> 'a-e')
     ses_haritasi = "-".join(kelime_unluler)
     
     return {
-        "Kelime": kayit["kelime"], # Orijinal hali
+        "Kelime": kayit["kelime"],
         "Anlam": kayit["anlam"],
         "Tür": kayit["tur"],
         "Duygu": kayit["duygu"],
         "Eş Anlam": kayit["es_anlam"],
+        "Vurgu": kayit["vurgu"],     # YENİ ÖZELLİK
         "Hece": len(kelime_unluler),
-        "Harf": len(kelime),
+        "Ses Haritası": ses_haritasi,
         "Son Harf": kelime[-1],
-        "Ses Haritası": ses_haritasi, # Örn: a-e, ü-i
-        "Yapı": "Sert" if any(h in sert_unsuzler for h in kelime) else "Yumuşak"
+        "Baş Harf": kelime[0]        # YENİ ÖZELLİK
     }
 
-# Veriyi işle
 df = pd.DataFrame([detayli_analiz(k) for k in kelime_veritabani])
 
-# --- 3. YENİ ARAYÜZ ---
-st.title("🎹 Şarkı Yazarı Stüdyosu v2")
+# --- 3. ARAYÜZ ---
+st.title("🎹 Şarkı Yazarı Stüdyosu v3")
 st.markdown("---")
 
-# Yan Panel (Gelişmiş Filtreler)
-st.sidebar.header("🎛️ Mikser (Filtreler)")
+# Yan Panel
+st.sidebar.header("🎛️ Mikser")
 
 # 1. TEMEL FİLTRELER
 with st.sidebar.expander("Temel Ayarlar", expanded=True):
@@ -64,74 +58,77 @@ with st.sidebar.expander("Temel Ayarlar", expanded=True):
     hece_araligi = st.slider("Hece Sayısı", 1, 10, (1, 5))
     duygu_modu = st.multiselect("Duygu Modu", df["Duygu"].unique())
 
-# 2. FONETİK FİLTRELER
-with st.sidebar.expander("Ses ve Fonetik"):
-    ses_yapisi = st.text_input("Sesli Harf Haritası (Örn: a-e)", help="Sadece 'a' ve 'e' seslilerini içerenleri bulmak için a-e yazın.")
-    son_harf = st.text_input("Son Harf", "").lower()
+# 2. SES ve FONETİK (GÜNCELLENDİ)
+with st.sidebar.expander("Ses ve Fonetik (Gelişmiş)", expanded=True):
+    col_a, col_b = st.columns(2)
+    with col_a:
+        bas_harf = st.text_input("Baş Harf", placeholder="Örn: s").lower()
+    with col_b:
+        son_harf = st.text_input("Son Harf", placeholder="Örn: a").lower()
+    
+    # Ters Köşe Kafiye (Assonance)
+    st.markdown("**Ters Köşe Kafiye (Assonance)**")
+    ses_yapisi = st.text_input("Sesli Harita", placeholder="Örn: a-e (Kalem -> Madem)", help="İçindeki seslileri sırasıyla yazın.")
+    
+    # Prozodi / Vurgu (YENİ)
+    st.markdown("**Prozodi (Vurgu Yeri)**")
+    vurgu_secimi = st.radio("Vurgu Nerede Olsun?", ["Farketmez", "Son", "İlk"], horizontal=True)
 
-# 3. JOKER ARAMA (YENİ!)
+# 3. JOKER ARAMA
 st.sidebar.subheader("🧩 Joker Arama")
-joker = st.sidebar.text_input("Desen (Örn: k**a)", help="Bilinmeyen harfler için * kullanın. Örn: k**a (4 harfli, k ile başlar a ile biter)")
+joker = st.sidebar.text_input("Desen", placeholder="Örn: k**a")
+def joker_kontrol(kelime, desen):
+    if len(kelime) != len(desen): return False
+    regex = desen.replace("*", ".")
+    return bool(re.match(f"^{regex}$", kelime))
 
 # --- 4. FİLTRELEME MANTIĞI ---
 sonuc = df.copy()
 
-# Tür Filtresi
-if secilen_turler:
-    sonuc = sonuc[sonuc["Tür"].isin(secilen_turler)]
-
-# Hece Filtresi
+if secilen_turler: sonuc = sonuc[sonuc["Tür"].isin(secilen_turler)]
 sonuc = sonuc[(sonuc["Hece"] >= hece_araligi[0]) & (sonuc["Hece"] <= hece_araligi[1])]
+if duygu_modu: sonuc = sonuc[sonuc["Duygu"].isin(duygu_modu)]
+if bas_harf: sonuc = sonuc[sonuc["Kelime"].str.startswith(bas_harf)] # Baş harf filtresi
+if son_harf: sonuc = sonuc[sonuc["Kelime"].str.endswith(son_harf)]
+if ses_yapisi: sonuc = sonuc[sonuc["Ses Haritası"] == ses_yapisi]
+if vurgu_secimi != "Farketmez": sonuc = sonuc[sonuc["Vurgu"] == vurgu_secimi] # Vurgu filtresi
+if joker: sonuc = sonuc[sonuc["Kelime"].apply(lambda x: joker_kontrol(x, joker))]
 
-# Duygu Filtresi
-if duygu_modu:
-    sonuc = sonuc[sonuc["Duygu"].isin(duygu_modu)]
-
-# Ses Haritası (Assonance)
-if ses_yapisi:
-    sonuc = sonuc[sonuc["Ses Haritası"] == ses_yapisi]
-
-# Son Harf
-if son_harf:
-    sonuc = sonuc[sonuc["Kelime"].str.endswith(son_harf)]
-
-# Joker Filtreleme Fonksiyonu
-def joker_kontrol(kelime, desen):
-    if len(kelime) != len(desen): return False
-    regex = desen.replace("*", ".") # * karakterini regex nokta (.) ile değiştir
-    return bool(re.match(f"^{regex}$", kelime))
-
-if joker:
-    sonuc = sonuc[sonuc["Kelime"].apply(lambda x: joker_kontrol(x, joker))]
-
-# --- 5. EKRAN GÖRÜNTÜSÜ VE DETAYLAR ---
-
-col1, col2 = st.columns([2, 1])
+# --- 5. EKRAN GÖRÜNTÜSÜ (YENİ TASARIM) ---
+col1, col2 = st.columns([2, 1]) # Ekranı 2'ye 1 oranında böl
 
 with col1:
     st.subheader(f"Bulunan Kelimeler ({len(sonuc)})")
+    # Tabloyu göster
     st.dataframe(
-        sonuc[["Kelime", "Hece", "Tür", "Duygu", "Ses Haritası"]], 
-        use_container_width=True,
-        height=400
+        sonuc[["Kelime", "Hece", "Tür", "Duygu", "Vurgu"]], 
+        use_container_width=True, 
+        height=450
     )
 
 with col2:
-    st.subheader("🔍 Kelime İncele")
+    st.subheader("🔍 Hızlı İncele")
+    
     if not sonuc.empty:
-        secilen_kelime = st.selectbox("Detayına bakmak istediğin kelime:", sonuc["Kelime"].tolist())
+        # AKILLI SEÇİM: Listede ne kaldıysa, kutuda sadece onlar çıkar.
+        # Varsayılan olarak listenin en tepesindeki kelime seçili gelir.
+        secilen_kelime = st.selectbox(
+            "Detay Kartı:", 
+            sonuc["Kelime"].tolist(),
+            index=0 # Her zaman ilk kelimeyi seçili getir
+        )
         
-        # Seçilen kelimenin bilgilerini çek
+        # Seçilenin detaylarını getir
         bilgi = sonuc[sonuc["Kelime"] == secilen_kelime].iloc[0]
         
+        # Kart Tasarımı
         st.info(f"**{bilgi['Kelime'].upper()}**")
-        st.markdown(f"**Anlam:** {bilgi['Anlam']}")
-        st.markdown(f"**Eş Anlam:** {bilgi['Eş Anlam']}")
-        st.markdown(f"**Tür:** {bilgi['Tür']}")
-        
+        st.write(f"📖 **Anlam:** {bilgi['Anlam']}")
+        st.write(f"🔄 **Eş Anlam:** {bilgi['Eş Anlam']}")
+        st.write(f"🏷️ **Tür:** {bilgi['Tür']}")
         st.markdown("---")
-        st.caption("Müzikal Analiz:")
-        st.text(f"Hece: {bilgi['Hece']}")
-        st.text(f"Tını: {bilgi['Ses Haritası']} ({bilgi['Yapı']})")
+        st.write(f"🎼 **Vurgu:** {bilgi['Vurgu']} hecede")
+        st.write(f"🎹 **Tını:** {bilgi['Ses Haritası']}")
+        
     else:
-        st.warning("Bu kriterlere uygun kelime bulunamadı.")
+        st.warning("Kriterlere uygun kelime yok.")
