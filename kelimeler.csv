@@ -108,3 +108,323 @@ sonra,Daha ileri zaman.,Zarf,Erteleme,-,İlk
 bugün,İçinde bulunulan gün.,İsim,Güncel,-,Son
 yarın,Bir sonraki gün.,İsim,Umut,-,Son
 dün,Bir önceki gün.,İsim,Geçmiş,-,Son
+gitmek,Bir yere doğru ilerlemek.,Fiil,Hareket,varmak,Son
+gelmek,Beriye doğru ilerlemek.,Fiil,Hareket,ulaşmak,Son
+almak,Bir şeyi tutmak.,Fiil,Sahiplik,edinmek,Son
+vermek,İletmek.,Fiil,Cömertlik,sunmak,Son
+yapmak,Gerçekleştirmek.,Fiil,Eylem,etmek,Son
+olmak,Meydana gelmek.,Fiil,Varoluş,bulunmak,Son
+demek,Söylemek.,Fiil,İletişim,söylemek,Son
+bakmak,Göz ile incelemek.,Fiil,Algı,görmek,Son
+görmek,Gözle algılamak.,Fiil,Algı,bakmak,Son
+sevmek,Bağlılık duymak.,Fiil,Duygu,hoşlanmak,Son
+istemek,Arzu etmek.,Fiil,Arzu,dilemek,Son
+durmak,Hareketsiz kalmak.,Fiil,Durgunluk,beklemek,Son
+düşmek,Yer çekimiyle inmek.,Fiil,Düşüş,devrilmek,Son
+kalkmak,Yukarı doğru yönelmek.,Fiil,Yükseliş,doğrulmak,Son
+bilmek,Kavramış olmak.,Fiil,Bilgi,tanımak,Son
+bulmak,Erişmek.,Fiil,Keşif,rastlamak,Son
+aramak,Araştırmak.,Fiil,Arayış,-,Son
+sormak,Sual etmek.,Fiil,Merak,danışmak,Son
+geçmek,Bir yerden ilerlemek.,Fiil,Zaman,aşmak,Son
+kalmak,Gitmemek.,Fiil,Durum,-,Son
+çekmek,Kendine doğru almak.,Fiil,Güç,sürüklemek,Son
+atmak,Fırlatmak.,Fiil,Tepki,-,Son
+gülmek,Mutlu ses çıkarmak.,Fiil,Mutluluk,-,Son
+ağlamak,Gözyaşı dökmek.,Fiil,Üzüntü,-,Son
+duymak,İşitmek.,Fiil,Algı,işitmek,Son
+açmak,Kapalıyı açık yapmak.,Fiil,Başlangıç,-,Son
+kapatmak,Açığı engellemek.,Fiil,Bitiş,örtmek,Son
+okumak,Yazıyı anlamak.,Fiil,Bilgi,-,Son
+yazmak,Sözü kaydetmek.,Fiil,Sanat,-,Son
+oturmak,Yerleşmek.,Fiil,Durgunluk,-,Son
+yaşamak,Canlı olmak.,Fiil,Hayat,-,Son
+ölmek,Hayatı bitmek.,Fiil,Ölüm,-,Son
+korkmak,Ürkmek.,Fiil,Korku,-,Son
+kaçmak,Uzaklaşmak.,Fiil,Korku,firar,Son
+tutmak,Ele almak.,Fiil,Güç,-,Son
+bırakmak,Salıvermek.,Fiil,Ayrılık,terk,Son
+anlatmak,Bilgi vermek.,Fiil,İletişim,izah,Son
+dinlemek,Kulak vermek.,Fiil,Saygı,-,Son
+sanmak,Zannetmek.,Fiil,Şüphe,-,Son
+unutmak,Hatırlamamak.,Fiil,Kayıp,-,Son
+hatırlamak,Anımsamak.,Fiil,Anı,-,Son
+kırmak,Parçalamak.,Fiil,Hasar,-,Son
+dökmek,Akıtmak.,Fiil,Hareket,-,Son
+yakmak,Ateşe vermek.,Fiil,Acı,-,Son
+yanmak,Tutuşmak.,Fiil,Acı,-,Son
+uçmak,Havalanmak.,Fiil,Özgürlük,-,Son
+yüzmek,Suda ilerlemek.,Fiil,Hareket,-,Son
+koşmak,Hızlı gitmek.,Fiil,Hareket,-,Son
+oynamak,Vakit geçirmek.,Fiil,Eğlence,-,Son
+çalmak,Müzik icra etmek.,Fiil,Sanat,-,Son
+söylemek,İfade etmek.,Fiil,İletişim,-,Son
+düşünmek,Akıl yürütmek.,Fiil,Zihin,-,Son
+hissetmek,Duyumsamak.,Fiil,Duygu,-,Son
+özlemek,Hasret çekmek.,Fiil,Duygu,-,Son
+kıskanmak,Gıpta etmek.,Fiil,Duygu,-,Son
+inanmak,Güvenmek.,Fiil,İnanç,-,Son
+affetmek,Bağışlamak.,Fiil,Erdem,-,Son
+susmak,Ses çıkarmamak.,Fiil,Sessizlik,-,Son
+bağırmak,Yüksek ses.,Fiil,Öfke,haykırmak,Son
+girmek,İçeri geçmek.,Fiil,Giriş,-,Son
+çıkmak,Dışarı gitmek.,Fiil,Çıkış,-,Son
+başlamak,İlk adımı atmak.,Fiil,Başlangıç,-,Son
+bitmek,Sona ermek.,Fiil,Bitiş,tükenmek,Son
+değişmek,Başka hal almak.,Fiil,Değişim,-,Son
+dönmek,Geri gelmek.,Fiil,Dönüş,-,Son
+büyümek,İri olmak.,Fiil,Gelişim,-,Son
+küçülmek,Ufak olmak.,Fiil,Azalış,-,Son
+gelişmek,İlerlemek.,Fiil,Başarı,-,Son
+yıkılmak,Çökmek.,Fiil,Yıkım,-,Son
+kurmak,İnşa etmek.,Fiil,Yapı,-,Son
+bozmak,Hasar vermek.,Fiil,Hata,-,Son
+toprak,Yeryüzü örtüsü.,İsim,Doğa,yer,Son
+gökyüzü,Sema.,İsim,Doğa,sema,Son
+su,Yaşam sıvısı.,İsim,Doğa,ab,Son
+ateş,Yanıcı madde.,İsim,Doğa,nar,Son
+hava,Gaz tabakası.,İsim,Doğa,-,Son
+rüzgar,Hava akımı.,İsim,Doğa,yell,Son
+yağmur,Gökten düşen su.,İsim,Doğa,rahmet,Son
+kar,Beyaz yağış.,İsim,Doğa,-,Son
+buz,Donmuş su.,İsim,Soğuk,-,Son
+güneş,Isı kaynağı.,İsim,Sıcak,-,Son
+ay,Gece ışığı.,İsim,Romantik,-,Son
+yıldız,Gök cismi.,İsim,Umut,-,Son
+gece,Karanlık zaman.,İsim,Zaman,-,Son
+gündüz,Aydınlık zaman.,İsim,Zaman,-,Son
+sabah,Günün başı.,İsim,Umut,-,Son
+akşam,Günün sonu.,İsim,Hüzün,-,Son
+zaman,Vakit.,İsim,Soyut,vakit,Son
+saat,Zaman ölçer.,İsim,Zaman,-,Son
+dakika,Zaman birimi.,İsim,Zaman,-,Son
+yıl,Sene.,İsim,Zaman,sene,Son
+gün,24 saat.,İsim,Zaman,-,Son
+dün,Geçmiş gün.,İsim,Geçmiş,-,Son
+bugün,Şimdiki gün.,İsim,Şimdi,-,Son
+yarın,Gelecek gün.,İsim,Gelecek,-,Son
+hayat,Yaşam.,İsim,Soyut,ömür,Son
+ölüm,Hayatın sonu.,İsim,Soyut,vefat,Son
+dünya,Gezegenimiz.,İsim,Evren,cihan,Son
+insan,Biz.,İsim,Canlı,beşer,Son
+kadın,Dişi insan.,İsim,İnsan,-,Son
+erkek,Eril insan.,İsim,İnsan,adam,Son
+çocuk,Küçük insan.,İsim,Masumiyet,-,Son
+anne,Dişi ebeveyn.,İsim,Sevgi,-,Son
+baba,Erkek ebeveyn.,İsim,Güven,-,Son
+arkadaş,Dost.,İsim,Sosyal,-,Son
+sevgili,Sevilen kişi.,İsim,Aşk,yar,Son
+kalp,Yürek.,İsim,Duygu,yürek,Son
+akıl,Zihin.,İsim,Mantık,us,Son
+ruh,Manevi yan.,İsim,Soyut,tin,Son
+beden,Vücut.,İsim,Fizik,vücut,Son
+el,Uzuv.,İsim,Fizik,-,Son
+göz,Görme organı.,İsim,Algı,-,Son
+yüz,Çehre.,İsim,Görünüş,surat,Son
+saç,Baş tüyü.,İsim,Güzellik,-,Son
+dil,Konuşma organı.,İsim,İletişim,lisan,Son
+söz,Kelime.,İsim,İletişim,laf,Son
+ses,Titreşim.,İsim,Duyu,-,Son
+renk,Işık yansıması.,İsim,Görünüş,-,Son
+beyaz,Ak.,Sıfat,Saf,ak,Son
+siyah,Kara.,Sıfat,Karanlık,kara,Son
+kırmızı,Al.,Sıfat,Tutku,al,Son
+mavi,Gök rengi.,Sıfat,Huzur,-,Son
+yeşil,Doğa rengi.,Sıfat,Canlı,-,Son
+sarı,Güneş rengi.,Sıfat,Enerji,-,Son
+büyük,İri.,Sıfat,Boyut,-,Son
+küçük,Ufak.,Sıfat,Boyut,-,Son
+uzun,Boylu.,Sıfat,Boyut,-,Son
+kısa,Bodur.,Sıfat,Boyut,-,Son
+geniş,Enli.,Sıfat,Boyut,-,Son
+dar,Sıkışık.,Sıfat,Kısıtlı,-,Son
+güzel,Hoş.,Sıfat,Estetik,-,Son
+çirkin,Hoş olmayan.,Sıfat,Negatif,-,Son
+iyi,Yararlı.,Sıfat,Pozitif,-,Son
+kötü,Zararlı.,Sıfat,Negatif,fena,Son
+doğru,Gerçek.,Sıfat,Dürüst,-,Son
+yanlış,Hatalı.,Sıfat,Hata,-,Son
+kolay,Basit.,Sıfat,Rahat,-,Son
+zor,Güç.,Sıfat,Çaba,çetin,Son
+yeni,Taze.,Sıfat,Güncel,-,Son
+eski,Geçmiş.,Sıfat,Tarih,-,Son
+genç,Toy.,Sıfat,Enerji,-,Son
+yaşlı,İhtiyar.,Sıfat,Bilge,-,Son
+mutlu,Sevinçli.,Sıfat,Pozitif,-,Son
+üzgün,Kederli.,Sıfat,Negatif,-,Son
+kızgın,Öfkeli.,Sıfat,Negatif,-,Son
+sakin,Durgun.,Sıfat,Huzur,-,Son
+hızlı,Süratli.,Sıfat,Hız,-,Son
+yavaş,Ağır.,Sıfat,Hız,-,Son
+sıcak,Isınmış.,Sıfat,Isı,-,Son
+soğuk,Üşümüş.,Sıfat,Isı,-,Son
+tatlı,Lezzetli.,Sıfat,Tat,-,Son
+acı,Keder verici.,Sıfat,Tat,-,Son
+tuzlu,Tuzu çok.,Sıfat,Tat,-,Son
+ekşi,Mayhoş.,Sıfat,Tat,-,Son
+karanlık,Işıksız.,Sıfat,Ortam,-,Son
+aydınlık,Işıklı.,Sıfat,Ortam,-,Son
+sessiz,Gürültüsüz.,Sıfat,Ortam,-,Son
+gürültülü,Sesli.,Sıfat,Ortam,-,Son
+yalnız,Tek başına.,Sıfat,Durum,-,Son
+kalabalık,Çok insanlı.,Sıfat,Durum,-,Son
+zengin,Varlıklı.,Sıfat,Durum,-,Son
+fakir,Yoksul.,Sıfat,Durum,-,Son
+açık,Kapalı olmayan.,Sıfat,Durum,-,Son
+kapalı,Açık olmayan.,Sıfat,Durum,-,Son
+dolu,Boş olmayan.,Sıfat,Miktar,-,Son
+boş,Dolu olmayan.,Sıfat,Miktar,-,Son
+aynı,Benzer.,Sıfat,Karşılaştırma,-,Son
+farklı,Değişik.,Sıfat,Karşılaştırma,-,Son
+önemli,Mühim.,Sıfat,Değer,-,Son
+gereksiz,Lüzumsuz.,Sıfat,Değer,-,Son
+gerçek,Hakiki.,Sıfat,Durum,-,Son
+yalan,Sahte.,Sıfat,Durum,-,Son
+ilk,Birinci.,Sıfat,Sıra,-,Son
+son,Bitiş.,Sıfat,Sıra,-,Son
+belki,İhtimal.,Zarf,Belirsizlik,-,İlk
+asla,Hiçbir zaman.,Zarf,Kesinlik,-,İlk
+daima,Her zaman.,Zarf,Süreklilik,-,İlk
+şimdi,Şu an.,Zarf,Zaman,-,İlk
+sonra,İleride.,Zarf,Zaman,-,İlk
+önce,Evvel.,Zarf,Zaman,-,İlk
+yine,Tekrar.,Zarf,Tekrar,-,İlk
+hala,Henüz.,Zarf,Süreklilik,-,İlk
+sanki,Gibi.,Zarf,Benzetme,-,İlk
+keşke,Dilek.,Zarf,Pişmanlık,-,İlk
+tabii,Elbette.,Zarf,Onay,-,Son
+hayır,Ret.,Zarf,Ret,-,İlk
+evet,Onay.,Zarf,Onay,-,İlk
+tamam,Kabul.,Zarf,Onay,-,Son
+lütfen,Rica.,Zarf,Nezaket,-,İlk
+merhaba,Selam.,Zarf,Selam,-,Son
+hoşçakal,Veda.,Zarf,Veda,-,Son
+günaydın,Sabah selamı.,Nida,Selam,-,Son
+iyi geceler,Gece selamı.,Nida,Selam,-,Son
+nasılsın,Hal hatır.,Soru,İletişim,-,Son
+neden,Sebep.,Soru,Sorgu,niçin,İlk
+nasıl,Yöntem.,Soru,Sorgu,-,İlk
+nerede,Yer.,Soru,Sorgu,-,İlk
+kim,Kişi.,Soru,Sorgu,-,Son
+ne,Nesne.,Soru,Sorgu,-,Son
+zaman,Vakit.,Soru,Sorgu,-,Son
+hangi,Seçim.,Soru,Sorgu,-,İlk
+kaç,Miktar.,Soru,Sorgu,-,Son
+acaba,Merak.,Zarf,Şüphe,-,İlk
+galiba,Sanırım.,Zarf,Tahmin,-,İlk
+mutlaka,Kesinlikle.,Zarf,Kesinlik,-,İlk
+herkes,Tüm kişiler.,Zamir,Genel,-,Son
+kimse,Hiç kimse.,Zamir,Olumsuzluk,-,Son
+biri,Bir kişi.,Zamir,Belirsiz,-,Son
+şey,Nesne.,Zamir,Belirsiz,-,Son
+her,Hepsi.,Sıfat,Genel,-,Son
+hiç,Yokluk.,Zarf,Yokluk,-,Son
+çok,Fazla.,Zarf,Miktar,-,Son
+az,Eksik.,Zarf,Miktar,-,Son
+biraz,Az miktar.,Zarf,Miktar,-,Son
+bütün,Tamamı.,Sıfat,Genel,-,Son
+bazı,Kimi.,Sıfat,Belirsiz,-,İlk
+tüm,Hepsi.,Sıfat,Genel,-,Son
+yok,Mevcut değil.,İsim,Yokluk,-,Son
+var,Mevcut.,İsim,Varlık,-,Son
+sitem,Bir kimseye üzüldüğünü belirtme.,İsim,Hüzün,yakınma,Son
+feryat,Yüksek sesle haykırış.,İsim,Acı,çığlık,Son
+keder,Acı ve üzüntü.,İsim,Melankolik,tasa,Son
+yas,Ölümden duyulan acı.,İsim,Melankolik,matem,Son
+coşku,Heyecan ve sevinç.,İsim,Pozitif,heyecan,Son
+tutku,Aşırı sevgi ve bağlılık.,İsim,Romantik,ihtiras,Son
+naif,Saf ve deneyimsiz.,Sıfat,Masum,saf,Son
+gaddar,Acımasız olan.,Sıfat,Negatif,zalim,Son
+vefasız,Sevgisi çabuk geçen.,Sıfat,Sitem,hayırsız,Son
+biçare,Çaresiz kalmış.,Sıfat,Melankolik,çaresiz,İlk
+divane,Aşkla aklını yitirmiş.,Sıfat,Romantik,deli,Son
+viran,Yıkılmış dökülmüş.,Sıfat,Melankolik,yıkık,Son
+yaban,İnsan yaşamayan yer.,İsim,Vahşi,ıssız,Son
+firari,Kaçmış olan.,İsim,Aksiyon,kaçak,Son
+mülteci,Sığınmacı.,İsim,Politik,sığınmacı,Son
+sürgün,Ceza olarak gönderilme.,İsim,Melankolik,nefi,Son
+kafes,Tutsaklık yeri.,İsim,Kısıtlanma,-,Son
+zincir,Bağlama aracı.,İsim,Tutsaklık,pranga,Son
+uçurum,Derin yar.,İsim,Tehlike,yar,Son
+çıkmaz,Sonu olmayan yol.,İsim,Umutsuzluk,kör,Son
+labirent,Karmaşık yollar.,İsim,Gizem,dehliz,Son
+pusula,Yön gösteren araç.,İsim,Umut,-,Son
+rota,Gidilecek yön.,İsim,Macera,güzergah,Son
+liman,Sığınma yeri.,İsim,Huzur,-,Son
+gemi,Deniz taşıtı.,İsim,Özgürlük,tekne,Son
+yelken,Rüzgarla giden.,İsim,Özgürlük,-,Son
+alabora,Ters dönme.,Fiil,Felaket,-,Son
+batmak,Dibine çökmek.,Fiil,Çöküş,gömülmek,Son
+doğmak,Ortaya çıkmak.,Fiil,Umut,-,Son
+sönmek,Işığını yitirmek.,Fiil,Bitiş,-,Son
+yanmak,Ateş almak.,Fiil,Acı,tutuşmak,Son
+donmak,Buz tutmak.,Fiil,Hissizlik,-,Son
+titremek,Sarsılmak.,Fiil,Korku,ürpermek,Son
+susuz,Suyu olmayan.,Sıfat,Yokluk,kurak,Son
+çöl,Kumsal arazi.,İsim,Yalnızlık,sahra,Son
+vaha,Çöldeki su kaynağı.,İsim,Umut,-,Son
+serap,Hayal görme.,İsim,Yanılsama,hayal,Son
+kulis,Sahne arkası.,İsim,Gizem,-,Son
+maske,Yüzü gizleyen şey.,İsim,Sahtelik,-,Son
+sahne,Oyun yeri.,İsim,Gösteriş,-,Son
+alkış,Beğeni sesi.,İsim,Başarı,-,Son
+perde,Görüntüyü kesen örtü.,İsim,Gizem,-,Son
+rol,Yapmacık davranış.,İsim,Sahtelik,-,Son
+replik,Ezber söz.,İsim,Yapay,-,Son
+final,Son bölüm.,İsim,Bitiş,son,Son
+intro,Giriş bölümü.,İsim,Başlangıç,giriş,İlk
+nakarat,Tekrar eden bölüm.,İsim,Vurgu,kavuştak,Son
+beste,Müzik eseri.,İsim,Sanat,-,Son
+güfte,Şarkı sözü.,İsim,Sanat,söz,Son
+akustik,Doğal ses.,Sıfat,Doğal,-,Son
+distorsiyon,Bozulmuş ses.,İsim,Kaos,bozunum,Son
+frekans,Titreşim sıklığı.,İsim,Modern,-,Son
+volüm,Ses seviyesi.,İsim,Güç,hacim,Son
+stereo,Çift kanallı ses.,İsim,Modern,-,İlk
+mono,Tek kanallı ses.,İsim,Eski,tek,İlk
+dj,Müzik çalan kişi.,İsim,Modern,-,Son
+parti,Eğlence toplantısı.,İsim,Eğlence,-,Son
+dans,Ritmik hareket.,İsim,Hareket,raks,Son
+sarhoş,Aklı dumanlı.,Sıfat,Bulanık,mest,Son
+ayık,Kendinde olan.,Sıfat,Netlik,-,Son
+baygın,Kendinden geçmiş.,Sıfat,Zayıf,-,Son
+uykusuz,Uyumamış.,Sıfat,Yorgun,bidar,Son
+rüya,Düş.,İsim,Gizem,düş,Son
+kabus,Kötü rüya.,İsim,Korku,karabasan,Son
+uyku,Dinlenme hali.,İsim,Huzur,nevm,Son
+gaflet,Dalgınlık.,İsim,Hata,-,Son
+ihanet,Hainlik.,İsim,Öfke,hıyanet,Son
+sadakat,Bağlılık.,İsim,Güven,vefa,Son
+yemin,Söz verme.,İsim,Ciddi,ant,Son
+tövbe,Pişmanlık sözü.,İsim,Dönüş,-,Son
+günah,Dini suç.,İsim,Yasak,suç,Son
+sevap,İyi davranış.,İsim,İyilik,-,Son
+kıyamet,Dünyanın sonu.,İsim,Felaket,-,Son
+mahşer,Kalabalık yer.,İsim,Kaos,-,Son
+aval aval,Şaşkın ve bön bir biçimde.,İkileme,Şaşkınlık,-,İlk
+süklüm püklüm,Utanmış ve çekinerek.,İkileme,Mahcup,-,İlk
+pıl pırtı,Eski ve değersiz eşyalar.,İkileme,Negatif,-,İlk
+apar topar,Aceleyle.,İkileme,Telaş,-,İlk
+eğri büğrü,Düzgün olmayan.,İkileme,Negatif,-,İlk
+tıkır tıkır,Düzenli işleyen.,İkileme,Düzen,-,İlk
+şırıl şırıl,Su sesi çıkararak.,İkileme,Huzur,-,İlk
+gürül gürül,Güçlü ve bol akan.,İkileme,Güç,-,İlk
+usul usul,Yavaş ve sessizce.,İkileme,Sakin,-,İlk
+palas pandıras,Aceleyle ve özensiz.,İkileme,Telaş,-,İlk
+hey,Seslenme sözü.,Nida,Coşku,-,İlk
+ah,Acı veya özlem sesi.,Nida,Melankolik,-,İlk
+of,Bıkkınlık sesi.,Nida,Negatif,-,İlk
+vah vah,Acıma ifadesi.,Nida,Melankolik,-,İlk
+yoo,İtiraz sözü.,Nida,İtiraz,-,İlk
+be,Şaşma veya sitem.,Nida,Agresif,-,İlk
+bre,Heyt be anlamında.,Nida,Güç,-,İlk
+eyvah,Kötü bir durum anında.,Nida,Korku,-,İlk
+aman,Dikkat çekme veya bıkkınlık.,Nida,Uyarı,-,İlk
+hah,İşte şimdi oldu anlamında.,Nida,Onay,-,İlk
+hişt,Seslenme.,Nida,Gizem,-,İlk
+oh be,Rahatlama.,Nida,Huzur,-,İlk
+valla,Yemin veya onay.,Nida,Onay,-,İlk
+aferin,Övgü sözü.,Nida,Pozitif,-,Son
+bravo,Takdir sözü.,Nida,Coşku,-,Son
+hayda,Şaşkınlık veya terslik.,Nida,Şaşkınlık,-,İlk
+yazık,Acıma.,Nida,Melankolik,-,Son
