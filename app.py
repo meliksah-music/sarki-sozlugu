@@ -1,14 +1,33 @@
 import streamlit as st
 import pandas as pd
-import re
 
-# --- 1. AYARLAR VE VERİ YÜKLEME ---
-st.set_page_config(page_title="Şarkı Yazarı Stüdyosu v5", layout="wide")
+st.set_page_config(page_title="Şarkı Yazarı Stüdyosu v7", layout="wide")
 
-# Filtreleri Temizleme Fonksiyonu (Callback)
+@st.cache_data
+def veri_yukle():
+    try:
+        df_csv = pd.read_parquet("kelimeler.parquet")
+        df_csv = df_csv.fillna("-")
+        return df_csv
+    except Exception:
+        return pd.DataFrame()
+
+# Veriyi yükle
+ham_veri = veri_yukle()
+
+if ham_veri.empty:
+    st.error("⚠️ Veri yüklenemedi! GitHub'a 'kelimeler.parquet' dosyasını yüklediğinden emin ol.")
+    st.stop()
+
+# Dinamik Sınırlar (Hatayı önlemek için veriden okuyoruz)
+MIN_HECE = int(ham_veri["hece"].min())
+MAX_HECE = int(ham_veri["hece"].max())
+
+# Filtreleri Temizleme Fonksiyonu
 def filtreleri_temizle():
+    # Session state'i güvenli şekilde sıfırla
     if "kelime_turu" in st.session_state: st.session_state.kelime_turu = []
-    if "hece_sayisi" in st.session_state: st.session_state.hece_sayisi = (1, 15)
+    if "hece_sayisi" in st.session_state: st.session_state.hece_sayisi = (MIN_HECE, MAX_HECE)
     if "duygu_modu" in st.session_state: st.session_state.duygu_modu = []
     if "bas_harf" in st.session_state: st.session_state.bas_harf = ""
     if "son_harf" in st.session_state: st.session_state.son_harf = ""
@@ -16,139 +35,97 @@ def filtreleri_temizle():
     if "sesli_harita" in st.session_state: st.session_state.sesli_harita = ""
     if "vurgu_yeri" in st.session_state: st.session_state.vurgu_yeri = "Farketmez"
     if "joker_desen" in st.session_state: st.session_state.joker_desen = ""
+    if "sayfa_no" in st.session_state: st.session_state.sayfa_no = 0
 
-@st.cache_data
-def veri_yukle():
-    try:
-        # Parquet formatı ile ultra hızlı okuma
-        df_csv = pd.read_parquet("kelimeler.parquet")
-        df_csv = df_csv.fillna("-")
-        return df_csv
-    except Exception as e:
-        return pd.DataFrame()
-
-# Veriyi yükle
-ham_veri = veri_yukle()
-
-if ham_veri.empty:
-    st.error("⚠️ 'kelimeler.parquet' dosyası bulunamadı! Lütfen GitHub'a dosyayı yüklediğinden emin ol.")
-    st.stop()
-
-# --- 2. GELİŞMİŞ ANALİZ MOTORU ---
-def detayli_analiz(kayit):
-    kelime = str(kayit["kelime"]).lower()
-    unluler = "aeıioöuü"
-    kelime_unluler = [h for h in kelime if h in unluler]
-    ses_haritasi = "-".join(kelime_unluler)
-    return pd.Series([ses_haritasi], index=['ses_haritasi'])
-
-# Analiz sütununu veri yüklenirken bir kere hesaplayalım (Hız için)
+# Ses analizi (Anlık)
 if "ses_haritasi" not in ham_veri.columns:
-    analiz_sonuclari = ham_veri.apply(detayli_analiz, axis=1)
-    ham_veri = pd.concat([ham_veri, analiz_sonuclari], axis=1)
+    ham_veri["ses_haritasi"] = ham_veri["kelime"].apply(lambda x: "-".join([h for h in str(x).lower() if h in "aeıioöuü"]))
 
-# --- 3. ARAYÜZ (SOL PANEL) ---
+# --- ARAYÜZ ---
 with st.sidebar:
     st.header("🎹 Mikser")
-    
-    # Temizle Butonu
     st.button("🧹 Filtreleri Temizle", on_click=filtreleri_temizle, type="primary")
     st.markdown("---")
 
     with st.expander("🔻 Temel Ayarlar", expanded=True):
         secilen_turler = st.multiselect("Kelime Türü", options=ham_veri["tur"].unique(), key="kelime_turu")
-        min_h, max_h = int(ham_veri["hece"].min()), int(ham_veri["hece"].max())
-        secilen_hece = st.slider("Hece Sayısı", min_h, max_h, (min_h, max_h), key="hece_sayisi")
+        secilen_hece = st.slider("Hece Sayısı", MIN_HECE, MAX_HECE, (MIN_HECE, MAX_HECE), key="hece_sayisi")
         secilen_duygu = st.multiselect("Duygu Modu", options=ham_veri["duygu"].unique(), key="duygu_modu")
 
     with st.expander("🗣️ Ses ve Fonetik", expanded=False):
-        col1, col2 = st.columns(2)
-        with col1:
-            bas_harf = st.text_input("Baş Harf", placeholder="Örn: s", key="bas_harf").lower()
-        with col2:
-            son_harf = st.text_input("Son Harf", placeholder="Örn: a", key="son_harf").lower()
-        
-        ters_kose = st.text_input("Ters Köşe Kafiye (Assonance)", placeholder="Örn: ü-ü", help="Sadece sesli harfleri eşleştirir (hüzün -> ü-ü)", key="ters_kose").lower()
-        sesli_harita_input = st.text_input("Sesli Harita", placeholder="Örn: a-e", help="Tam ünlü sırasını arar (anne -> a-e)", key="sesli_harita").lower()
+        c1, c2 = st.columns(2)
+        bas_harf = c1.text_input("Baş Harf", key="bas_harf").lower()
+        son_harf = c2.text_input("Son Harf", key="son_harf").lower()
+        ters_kose = st.text_input("Ters Köşe (Assonance)", placeholder="Örn: ü-ü", key="ters_kose").lower()
+        sesli_harita_input = st.text_input("Sesli Harita", placeholder="Örn: a-e", key="sesli_harita").lower()
 
-    with st.expander("🥁 Prozodi (Vurgu Yeri)", expanded=False):
-        vurgu_secimi = st.radio("Vurgu Nerede Olsun?", ["Farketmez", "Son", "İlk"], key="vurgu_yeri")
+    with st.expander("🥁 Prozodi", expanded=False):
+        vurgu_secimi = st.radio("Vurgu", ["Farketmez", "Son", "İlk"], key="vurgu_yeri")
 
     st.markdown("---")
-    st.subheader("🧩 Joker Arama")
-    joker_desen = st.text_input("Desen", placeholder="Örn: k**a", help="* işareti herhangi bir harf demektir.", key="joker_desen").lower()
+    joker_desen = st.text_input("🧩 Joker Arama", placeholder="Örn: k**a", key="joker_desen").lower()
 
-# --- 4. FİLTRELEME MOTORU ---
-filtrelenmis_df = ham_veri.copy()
+# --- FİLTRELEME ---
+df = ham_veri.copy()
 
-if secilen_turler:
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["tur"].isin(secilen_turler)]
-
-filtrelenmis_df = filtrelenmis_df[
-    (filtrelenmis_df["hece"] >= secilen_hece[0]) & 
-    (filtrelenmis_df["hece"] <= secilen_hece[1])
-]
-
-if secilen_duygu:
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["duygu"].isin(secilen_duygu)]
-
-if bas_harf:
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["kelime"].str.startswith(bas_harf)]
-
-if son_harf:
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["kelime"].str.endswith(son_harf)]
-
-if ters_kose:
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["ses_haritasi"].str.endswith(ters_kose)]
-
-if sesli_harita_input:
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["ses_haritasi"] == sesli_harita_input]
-
-if vurgu_secimi != "Farketmez":
-    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["vurgu"].str.contains(vurgu_secimi, case=False)]
-
+if secilen_turler: df = df[df["tur"].isin(secilen_turler)]
+df = df[(df["hece"] >= secilen_hece[0]) & (df["hece"] <= secilen_hece[1])]
+if secilen_duygu: df = df[df["duygu"].isin(secilen_duygu)]
+if bas_harf: df = df[df["kelime"].str.startswith(bas_harf)]
+if son_harf: df = df[df["kelime"].str.endswith(son_harf)]
+if ters_kose: df = df[df["ses_haritasi"].str.endswith(ters_kose)]
+if sesli_harita_input: df = df[df["ses_haritasi"] == sesli_harita_input]
+if vurgu_secimi != "Farketmez": df = df[df["vurgu"].str.contains(vurgu_secimi, case=False)]
 if joker_desen:
-    regex_pattern = "^" + joker_desen.replace("*", ".") + "$"
-    try:
-        filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["kelime"].str.match(regex_pattern, na=False)]
-    except:
-        st.error("Hatalı desen girişi.")
+    regex = "^" + joker_desen.replace("*", ".") + "$"
+    try: df = df[df["kelime"].str.match(regex, na=False)]
+    except: pass
 
-# --- 5. SONUÇ GÖSTERİMİ ---
-st.title("🎹 Şarkı Yazarı Stüdyosu v5")
+# --- SAYFALAMA SİSTEMİ ---
+sonuc_sayisi = len(df)
+SAYFA_LIMITE = 100
 
-sonuc_sayisi = len(filtrelenmis_df)
+if "sayfa_no" not in st.session_state: st.session_state.sayfa_no = 0
 
-# Hız Ayarı: Çok fazla sonuç varsa sadece ilk 50'yi gösterelim (Tarayıcıyı kitlememek için)
-LIMIT = 50 
-gosterilecek_df = filtrelenmis_df.head(LIMIT)
+# Filtre değişince başa dön
+if sonuc_sayisi < st.session_state.sayfa_no * SAYFA_LIMITE:
+    st.session_state.sayfa_no = 0
 
-st.subheader(f"Bulunan Kelimeler ({sonuc_sayisi})")
+toplam_sayfa = max(1, (sonuc_sayisi + SAYFA_LIMITE - 1) // SAYFA_LIMITE)
+baslangic = st.session_state.sayfa_no * SAYFA_LIMITE
+bitis = min(sonuc_sayisi, baslangic + SAYFA_LIMITE)
 
-if sonuc_sayisi > LIMIT:
-    st.caption(f"🚀 Performans için sadece ilk {LIMIT} sonuç gösteriliyor. Daha spesifik filtreleme yapabilirsin.")
+gosterilecek_df = df.iloc[baslangic:bitis]
 
-col_table, col_detail = st.columns([1.5, 1])
+# --- SONUÇ GÖSTERİMİ ---
+st.title("🎹 Şarkı Yazarı Stüdyosu v7")
+st.caption(f"Toplam {sonuc_sayisi} kelime bulundu. (Sayfa {st.session_state.sayfa_no + 1} / {toplam_sayfa})")
 
-with col_table:
-    st.dataframe(
-        gosterilecek_df[["kelime", "hece", "tur", "duygu", "vurgu"]], 
-        use_container_width=True,
-        height=500
-    )
+c_tablo, c_detay = st.columns([1.5, 1])
 
-with col_detail:
+with c_tablo:
+    st.dataframe(gosterilecek_df[["kelime", "hece", "tur", "vurgu"]], use_container_width=True, height=500)
+    
+    # Sayfa Butonları
+    col_prev, col_info, col_next = st.columns([1, 2, 1])
+    if col_prev.button("⬅️ Önceki Sayfa") and st.session_state.sayfa_no > 0:
+        st.session_state.sayfa_no -= 1
+        st.rerun()
+    
+    if col_next.button("Sonraki Sayfa ➡️") and (st.session_state.sayfa_no + 1) < toplam_sayfa:
+        st.session_state.sayfa_no += 1
+        st.rerun()
+
+with c_detay:
     st.markdown("### 🔍 Hızlı İncele")
     if not gosterilecek_df.empty:
-        secilen_kelime_row = st.selectbox("Detay Kartı:", gosterilecek_df["kelime"].tolist())
-        detay = ham_veri[ham_veri["kelime"] == secilen_kelime_row].iloc[0]
-        
+        secilen = st.selectbox("Detay Kartı:", gosterilecek_df["kelime"].tolist())
+        detay = ham_veri[ham_veri["kelime"] == secilen].iloc[0]
         st.info(f"### {detay['kelime'].upper()}")
         st.write(f"📖 **Anlam:** {detay['anlam']}")
-        st.write(f"🔄 **Eş Anlam:** {detay['es_anlam']}")
         st.write(f"🏷️ **Tür:** {detay['tur']}")
         st.markdown("---")
         st.write(f"🎼 **Vurgu:** {detay['vurgu']} hecede")
-        st.write(f"🎹 **Tını:** {detay['ses_haritasi'].replace('-', '-')}")
+        st.write(f"🎹 **Tını:** {detay['ses_haritasi']}")
     else:
-        st.warning("Kriterlere uygun kelime bulunamadı.")
+        st.warning("Sonuç bulunamadı.")
