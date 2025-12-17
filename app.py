@@ -3,20 +3,28 @@ import pandas as pd
 import re
 
 # --- 1. AYARLAR VE VERİ YÜKLEME ---
-st.set_page_config(page_title="Şarkı Yazarı Stüdyosu v4", layout="wide")
+st.set_page_config(page_title="Şarkı Yazarı Stüdyosu v5", layout="wide")
 
-@st.cache_data # Performans artırıcı: Dosyayı her seferinde tekrar okumasın, hafızada tutsun.
-@st.cache_data 
+# Filtreleri Temizleme Fonksiyonu (Callback)
+def filtreleri_temizle():
+    if "kelime_turu" in st.session_state: st.session_state.kelime_turu = []
+    if "hece_sayisi" in st.session_state: st.session_state.hece_sayisi = (1, 15)
+    if "duygu_modu" in st.session_state: st.session_state.duygu_modu = []
+    if "bas_harf" in st.session_state: st.session_state.bas_harf = ""
+    if "son_harf" in st.session_state: st.session_state.son_harf = ""
+    if "ters_kose" in st.session_state: st.session_state.ters_kose = ""
+    if "sesli_harita" in st.session_state: st.session_state.sesli_harita = ""
+    if "vurgu_yeri" in st.session_state: st.session_state.vurgu_yeri = "Farketmez"
+    if "joker_desen" in st.session_state: st.session_state.joker_desen = ""
+
+@st.cache_data
 def veri_yukle():
     try:
-        # DEĞİŞEN KISIM BURASI: Artık CSV değil Parquet okuyoruz
+        # Parquet formatı ile ultra hızlı okuma
         df_csv = pd.read_parquet("kelimeler.parquet")
-        
-        # Olası boşlukları dolduralım (Güvenlik önlemi)
         df_csv = df_csv.fillna("-")
         return df_csv
     except Exception as e:
-        # Eğer dosya yoksa veya hata varsa boş dön
         return pd.DataFrame()
 
 # Veriyi yükle
@@ -28,105 +36,119 @@ if ham_veri.empty:
 
 # --- 2. GELİŞMİŞ ANALİZ MOTORU ---
 def detayli_analiz(kayit):
-    kelime = str(kayit["kelime"]).lower() # Garanti olsun diye string'e çevir
+    kelime = str(kayit["kelime"]).lower()
     unluler = "aeıioöuü"
-    
     kelime_unluler = [h for h in kelime if h in unluler]
     ses_haritasi = "-".join(kelime_unluler)
+    return pd.Series([ses_haritasi], index=['ses_haritasi'])
+
+# Analiz sütununu veri yüklenirken bir kere hesaplayalım (Hız için)
+if "ses_haritasi" not in ham_veri.columns:
+    analiz_sonuclari = ham_veri.apply(detayli_analiz, axis=1)
+    ham_veri = pd.concat([ham_veri, analiz_sonuclari], axis=1)
+
+# --- 3. ARAYÜZ (SOL PANEL) ---
+with st.sidebar:
+    st.header("🎹 Mikser")
     
-    return {
-        "Kelime": kayit["kelime"],
-        "Anlam": kayit["anlam"],
-        "Tür": kayit["tur"],
-        "Duygu": kayit["duygu"],
-        "Eş Anlam": kayit["es_anlam"],
-        "Vurgu": kayit["vurgu"],
-        "Hece": len(kelime_unluler), # Hece sayısını otomatik hesapla
-        "Ses Haritası": ses_haritasi,
-        "Son Harf": kelime[-1] if len(kelime) > 0 else "",
-        "Baş Harf": kelime[0] if len(kelime) > 0 else ""
-    }
+    # Temizle Butonu
+    st.button("🧹 Filtreleri Temizle", on_click=filtreleri_temizle, type="primary")
+    st.markdown("---")
 
-# CSV'deki her satırı analiz motorundan geçir
-df = pd.DataFrame([detayli_analiz(row) for index, row in ham_veri.iterrows()])
+    with st.expander("🔻 Temel Ayarlar", expanded=True):
+        secilen_turler = st.multiselect("Kelime Türü", options=ham_veri["tur"].unique(), key="kelime_turu")
+        min_h, max_h = int(ham_veri["hece"].min()), int(ham_veri["hece"].max())
+        secilen_hece = st.slider("Hece Sayısı", min_h, max_h, (min_h, max_h), key="hece_sayisi")
+        secilen_duygu = st.multiselect("Duygu Modu", options=ham_veri["duygu"].unique(), key="duygu_modu")
 
-# --- 3. ARAYÜZ ---
-st.title("🎹 Şarkı Yazarı Stüdyosu v4")
-st.markdown("---")
+    with st.expander("🗣️ Ses ve Fonetik", expanded=False):
+        col1, col2 = st.columns(2)
+        with col1:
+            bas_harf = st.text_input("Baş Harf", placeholder="Örn: s", key="bas_harf").lower()
+        with col2:
+            son_harf = st.text_input("Son Harf", placeholder="Örn: a", key="son_harf").lower()
+        
+        ters_kose = st.text_input("Ters Köşe Kafiye (Assonance)", placeholder="Örn: ü-ü", help="Sadece sesli harfleri eşleştirir (hüzün -> ü-ü)", key="ters_kose").lower()
+        sesli_harita_input = st.text_input("Sesli Harita", placeholder="Örn: a-e", help="Tam ünlü sırasını arar (anne -> a-e)", key="sesli_harita").lower()
 
-# Yan Panel
-st.sidebar.header("🎛️ Mikser")
+    with st.expander("🥁 Prozodi (Vurgu Yeri)", expanded=False):
+        vurgu_secimi = st.radio("Vurgu Nerede Olsun?", ["Farketmez", "Son", "İlk"], key="vurgu_yeri")
 
-# 1. TEMEL FİLTRELER
-with st.sidebar.expander("Temel Ayarlar", expanded=True):
-    # Türleri CSV'den otomatik öğren
-    secilen_turler = st.multiselect("Kelime Türü", df["Tür"].unique())
-    
-    # Hece sayısını dinamik yap (En az ve en çok heceyi veriden bul)
-    min_hece = int(df["Hece"].min())
-    max_hece = int(df["Hece"].max())
-    hece_araligi = st.slider("Hece Sayısı", min_hece, max_hece, (min_hece, max_hece))
-    
-    duygu_modu = st.multiselect("Duygu Modu", df["Duygu"].unique())
+    st.markdown("---")
+    st.subheader("🧩 Joker Arama")
+    joker_desen = st.text_input("Desen", placeholder="Örn: k**a", help="* işareti herhangi bir harf demektir.", key="joker_desen").lower()
 
-# 2. SES ve FONETİK
-with st.sidebar.expander("Ses ve Fonetik (Gelişmiş)", expanded=True):
-    col_a, col_b = st.columns(2)
-    with col_a:
-        bas_harf = st.text_input("Baş Harf", placeholder="Örn: s").lower()
-    with col_b:
-        son_harf = st.text_input("Son Harf", placeholder="Örn: a").lower()
-    
-    st.markdown("**Ters Köşe Kafiye (Assonance)**")
-    ses_yapisi = st.text_input("Sesli Harita", placeholder="Örn: a-e", help="İçindeki seslileri sırasıyla yazın.")
-    
-    st.markdown("**Prozodi (Vurgu Yeri)**")
-    vurgu_secimi = st.radio("Vurgu Nerede Olsun?", ["Farketmez", "Son", "İlk"], horizontal=True)
+# --- 4. FİLTRELEME MOTORU ---
+filtrelenmis_df = ham_veri.copy()
 
-# 3. JOKER ARAMA
-st.sidebar.subheader("🧩 Joker Arama")
-joker = st.sidebar.text_input("Desen", placeholder="Örn: k**a")
+if secilen_turler:
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["tur"].isin(secilen_turler)]
 
-def joker_kontrol(kelime, desen):
-    if len(kelime) != len(desen): return False
-    regex = desen.replace("*", ".")
-    return bool(re.match(f"^{regex}$", str(kelime).lower()))
+filtrelenmis_df = filtrelenmis_df[
+    (filtrelenmis_df["hece"] >= secilen_hece[0]) & 
+    (filtrelenmis_df["hece"] <= secilen_hece[1])
+]
 
-# --- 4. FİLTRELEME MANTIĞI ---
-sonuc = df.copy()
+if secilen_duygu:
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["duygu"].isin(secilen_duygu)]
 
-if secilen_turler: sonuc = sonuc[sonuc["Tür"].isin(secilen_turler)]
-sonuc = sonuc[(sonuc["Hece"] >= hece_araligi[0]) & (sonuc["Hece"] <= hece_araligi[1])]
-if duygu_modu: sonuc = sonuc[sonuc["Duygu"].isin(duygu_modu)]
-if bas_harf: sonuc = sonuc[sonuc["Kelime"].str.startswith(bas_harf)]
-if son_harf: sonuc = sonuc[sonuc["Kelime"].str.endswith(son_harf)]
-if ses_yapisi: sonuc = sonuc[sonuc["Ses Haritası"] == ses_yapisi]
-if vurgu_secimi != "Farketmez": sonuc = sonuc[sonuc["Vurgu"] == vurgu_secimi]
-if joker: sonuc = sonuc[sonuc["Kelime"].apply(lambda x: joker_kontrol(x, joker))]
+if bas_harf:
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["kelime"].str.startswith(bas_harf)]
 
-# --- 5. EKRAN GÖRÜNTÜSÜ ---
-col1, col2 = st.columns([2, 1])
+if son_harf:
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["kelime"].str.endswith(son_harf)]
 
-with col1:
-    st.subheader(f"Bulunan Kelimeler ({len(sonuc)})")
+if ters_kose:
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["ses_haritasi"].str.endswith(ters_kose)]
+
+if sesli_harita_input:
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["ses_haritasi"] == sesli_harita_input]
+
+if vurgu_secimi != "Farketmez":
+    filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["vurgu"].str.contains(vurgu_secimi, case=False)]
+
+if joker_desen:
+    regex_pattern = "^" + joker_desen.replace("*", ".") + "$"
+    try:
+        filtrelenmis_df = filtrelenmis_df[filtrelenmis_df["kelime"].str.match(regex_pattern, na=False)]
+    except:
+        st.error("Hatalı desen girişi.")
+
+# --- 5. SONUÇ GÖSTERİMİ ---
+st.title("🎹 Şarkı Yazarı Stüdyosu v5")
+
+sonuc_sayisi = len(filtrelenmis_df)
+
+# Hız Ayarı: Çok fazla sonuç varsa sadece ilk 50'yi gösterelim (Tarayıcıyı kitlememek için)
+LIMIT = 50 
+gosterilecek_df = filtrelenmis_df.head(LIMIT)
+
+st.subheader(f"Bulunan Kelimeler ({sonuc_sayisi})")
+
+if sonuc_sayisi > LIMIT:
+    st.caption(f"🚀 Performans için sadece ilk {LIMIT} sonuç gösteriliyor. Daha spesifik filtreleme yapabilirsin.")
+
+col_table, col_detail = st.columns([1.5, 1])
+
+with col_table:
     st.dataframe(
-        sonuc[["Kelime", "Hece", "Tür", "Duygu", "Vurgu"]], 
-        use_container_width=True, 
-        height=450
+        gosterilecek_df[["kelime", "hece", "tur", "duygu", "vurgu"]], 
+        use_container_width=True,
+        height=500
     )
 
-with col2:
-    st.subheader("🔍 Hızlı İncele")
-    if not sonuc.empty:
-        secilen_kelime = st.selectbox("Detay Kartı:", sonuc["Kelime"].tolist(), index=0)
-        bilgi = sonuc[sonuc["Kelime"] == secilen_kelime].iloc[0]
+with col_detail:
+    st.markdown("### 🔍 Hızlı İncele")
+    if not gosterilecek_df.empty:
+        secilen_kelime_row = st.selectbox("Detay Kartı:", gosterilecek_df["kelime"].tolist())
+        detay = ham_veri[ham_veri["kelime"] == secilen_kelime_row].iloc[0]
         
-        st.info(f"**{str(bilgi['Kelime']).upper()}**")
-        st.write(f"📖 **Anlam:** {bilgi['Anlam']}")
-        st.write(f"🔄 **Eş Anlam:** {bilgi['Eş Anlam']}")
-        st.write(f"🏷️ **Tür:** {bilgi['Tür']}")
+        st.info(f"### {detay['kelime'].upper()}")
+        st.write(f"📖 **Anlam:** {detay['anlam']}")
+        st.write(f"🔄 **Eş Anlam:** {detay['es_anlam']}")
+        st.write(f"🏷️ **Tür:** {detay['tur']}")
         st.markdown("---")
-        st.write(f"🎼 **Vurgu:** {bilgi['Vurgu']} hecede")
-        st.write(f"🎹 **Tını:** {bilgi['Ses Haritası']}")
+        st.write(f"🎼 **Vurgu:** {detay['vurgu']} hecede")
+        st.write(f"🎹 **Tını:** {detay['ses_haritasi'].replace('-', '-')}")
     else:
-        st.warning("Kriterlere uygun kelime yok.")
+        st.warning("Kriterlere uygun kelime bulunamadı.")
