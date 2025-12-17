@@ -6,22 +6,24 @@ import re
 st.set_page_config(page_title="Şarkı Yazarı Stüdyosu v4", layout="wide")
 
 @st.cache_data # Performans artırıcı: Dosyayı her seferinde tekrar okumasın, hafızada tutsun.
+@st.cache_data 
 def veri_yukle():
     try:
-        # GitHub'a yüklediğimiz CSV dosyasını okuyoruz
-        df_csv = pd.read_csv("kelimeler.csv")
+        # DEĞİŞEN KISIM BURASI: Artık CSV değil Parquet okuyoruz
+        df_csv = pd.read_parquet("kelimeler.parquet")
         
-        # Boş (NaN) değerleri temizleyelim (Hata vermemesi için)
+        # Olası boşlukları dolduralım (Güvenlik önlemi)
         df_csv = df_csv.fillna("-")
         return df_csv
-    except FileNotFoundError:
+    except Exception as e:
+        # Eğer dosya yoksa veya hata varsa boş dön
         return pd.DataFrame()
 
 # Veriyi yükle
 ham_veri = veri_yukle()
 
 if ham_veri.empty:
-    st.error("⚠️ 'kelimeler.csv' dosyası bulunamadı! Lütfen GitHub'a dosyayı yüklediğinden emin ol.")
+    st.error("⚠️ 'kelimeler.parquet' dosyası bulunamadı! Lütfen GitHub'a dosyayı yüklediğinden emin ol.")
     st.stop()
 
 # --- 2. GELİŞMİŞ ANALİZ MOTORU ---
